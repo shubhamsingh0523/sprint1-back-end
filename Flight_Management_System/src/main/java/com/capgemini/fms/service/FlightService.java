@@ -45,9 +45,11 @@ public class FlightService {
 	}
 	
 	@Transactional
-	public Flight updateflight(Flight flight,Integer flightNumber)
+	public boolean updateflight(Flight flight,Integer flightNumber)
+	
 	{
-		return flightDao.save(flight);
+		flight.setFlightModel(flight.getFlightModel());
+		return flightDao.save(flight) !=null;
 	}
 	
 }

@@ -2,7 +2,7 @@ package com.capgemini.fms.controller;
 import java.util.List;
 
 import javax.validation.Valid;
-
+import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
@@ -25,7 +25,7 @@ import com.capgemini.fms.entity.Airport;
 import com.capgemini.fms.entity.Flight;
 import com.capgemini.fms.exception.FlightException;
 import com.capgemini.fms.service.FlightService;
-
+@CrossOrigin(origins="http://localhost:4200")
 @RestController
 public class FlightController {
 	@Autowired
@@ -59,8 +59,8 @@ public class FlightController {
 	}
 	
 	@CrossOrigin
-	@DeleteMapping("/deleteflight/{id}")
-	public ResponseEntity deleteflight(@Valid @RequestParam Integer flightNumber) throws FlightException
+	@DeleteMapping("/deleteflight/{flightNumber}")
+	public ResponseEntity<String> deleteflight( @PathVariable Integer flightNumber) throws FlightException
 	{
 		try
 		{
@@ -73,8 +73,8 @@ public class FlightController {
 	}
 	
 	@CrossOrigin
-	@PutMapping("/updateflight/{id}")
-	public ResponseEntity updateflight(@Valid @RequestBody Flight flight,@RequestParam Integer flightNumber,BindingResult br ) throws FlightException
+	@PutMapping("/updateflight/{flightNumber}")
+	public ResponseEntity<String> updateflight(@Valid @RequestBody Flight flight,@PathVariable Integer flightNumber,BindingResult br ) throws FlightException
 	{
 		String err = "";
 		if (br.hasErrors()) {
@@ -92,15 +92,20 @@ public class FlightController {
 		}
 	}
 	@CrossOrigin
-	@GetMapping("/getflightdetails")
-	public ResponseEntity<List<Flight>> flightdetails(@Valid @RequestParam Integer flightNumber){
-		List<Flight> flightList = flightservice.show();
-		return new ResponseEntity<List<Flight>>(flightList,HttpStatus.OK);
+	@GetMapping("/view-by-id/{flightNumber}")
+	public Optional<Flight> flightdetails(@PathVariable Integer flightNumber) throws FlightException{
+		try {
+			return flightservice.flightdetails(flightNumber);
 		}
+		catch(Exception ex)
+		{
+			throw new FlightException(ex.getMessage());
+		}
+	}
 		
 	}
 		
-	
+
 	
 	
 

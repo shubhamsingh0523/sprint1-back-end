@@ -1,118 +1,196 @@
 package com.capgemini.fms.entity;
 
-import java.time.LocalDateTime;
+import java.io.Serializable;
+import java.sql.Date;
 import java.util.List;
-import javax.persistence.Column;
+
 import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
-import javax.validation.constraints.NotNull;
+import javax.persistence.Id;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+import javax.validation.Valid;
+import javax.validation.constraints.Pattern;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Entity
-@Table(name ="booking")
+@Table(name="booking")
 @DynamicUpdate(true)
 @DynamicInsert(true)
 
-public class Booking {
-//@NotNull(message="Booking Id Is Mandatory")
+public class Booking implements Serializable{
+
 @Id
-@Column(name="booking_id")
-@GeneratedValue(strategy = GenerationType.SEQUENCE,generator ="booking_id")
+// @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "bk_seq")
+// @SequenceGenerator(sequenceName = "bk_seq", allocationSize = 1, name = "bk_seq")
+//// @GeneratedValue
+@GeneratedValue(strategy = GenerationType.AUTO)
+long  bookingId;
+long userId;
 
-private long bookingId;
+Date Bookingdate;
+   @OneToMany(mappedBy = "Id",fetch=FetchType.LAZY)
+   @JsonIgnore
+    @Valid
+private List<Passenger> passenger;
 
-@NotNull(message="Ticket Cost Is Mandatory")
-@Column(name="ticket_cost")
-private long ticketCost;
+double ticketCost;
 
-@NotNull(message="No of Passenger Is Mandatory")
-@Column(name="no_of_passenger")
-private int noOfPassengers;
+Integer flightNumber;
 
-@ManyToOne
-   @JoinColumn(name="user_id", nullable=false)
-   private User1 user1;
-@OneToMany(mappedBy="booking")
-   private List<Passenger> passengerList;
+int noOfPassengers;
 
-@ManyToOne
-   @JoinColumn(name="flight_number", nullable=false)
-   private Flight flight;
-   @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss")
-   private LocalDateTime bookingDate;
+
+@Pattern(regexp = "^[\\p{L} .'-]+$", message = "Name should not contain special characters.")
+     String passengerName;
+     int passengerAge;
+     String gender;
+     String seatType;
+    int extraBaggage;
+
+public Booking(long bookingId, long userId, Date bookingdate, @Valid List<Passenger> passenger, double ticketCost,
+Integer flightNumber, int noOfPassengers,
+@Pattern(regexp = "^[\\p{L} .'-]+$", message = "Name should not contain special characters.") String passengerName,
+int passengerAge, String gender, String seatType, int extraBaggage) {
+this.bookingId = bookingId;
+this.userId = userId;
+Bookingdate = bookingdate;
+this.passenger = passenger;
+this.ticketCost = ticketCost;
+this.flightNumber = flightNumber;
+this.noOfPassengers = noOfPassengers;
+this.passengerName = passengerName;
+this.passengerAge = passengerAge;
+this.gender = gender;
+this.seatType = seatType;
+this.extraBaggage = extraBaggage;
+}
+
+public Booking() {
+super();
+}
+public String getPassengerName() {
+return passengerName;
+}
+
+public void setPassengerName(String passengerName) {
+this.passengerName = passengerName;
+}
+
+public int getPassengerAge() {
+return passengerAge;
+}
+
+public void setPassengerAge(int passengerAge) {
+this.passengerAge = passengerAge;
+}
+
+public String getGender() {
+return gender;
+}
+
+public void setGender(String gender) {
+this.gender = gender;
+}
+
+public String getSeatType() {
+return seatType;
+}
+
+public void setSeatType(String seatType) {
+this.seatType = seatType;
+}
+
+public int getExtraBaggage() {
+return extraBaggage;
+}
+
+public void setExtraBabbage(int extraBaggage) {
+this.extraBaggage = extraBaggage;
+}
+
+public Integer getFlightNumber() {
+return flightNumber;
+}
+
+public void setFlightNumber(Integer flightNumber) {
+this.flightNumber = flightNumber;
+}
+
+public Booking(long bookingId) {
+bookingId = bookingId;
+}
+
 public long getBookingId() {
 return bookingId;
 }
+
 public void setBookingId(long bookingId) {
-this.bookingId = bookingId;
+bookingId = bookingId;
 }
-public long getTicketCost() {
+
+
+public Date getBookingdate() {
+return Bookingdate;
+}
+
+public void setBookingdate(Date bookingdate) {
+Bookingdate = bookingdate;
+}
+
+public List<Passenger> getPassenger() {
+return passenger;
+}
+
+public void setPassenger(List<Passenger> passenger) {
+this.passenger = passenger;
+}
+
+public double getTicketCost() {
 return ticketCost;
 }
-public void setTicketCost(long ticketCost) {
+
+public void setTicketCost(double ticketCost) {
 this.ticketCost = ticketCost;
 }
+
+
+
+
+
+public long getUserId() {
+return userId;
+}
+
+public void setUserId(long userId) {
+this.userId = userId;
+}
+
+
 public int getNoOfPassengers() {
 return noOfPassengers;
 }
+
 public void setNoOfPassengers(int noOfPassengers) {
 this.noOfPassengers = noOfPassengers;
 }
-public User1 getUser1() {
-return user1;
-}
-public void setUser1(User1 user1) {
-this.user1 = user1;
-}
-public List<Passenger> getPassengerList() {
-return passengerList;
-}
-public void setPassengerList(List<Passenger> passengerList) {
-this.passengerList = passengerList;
-}
-public Flight getFlight() {
-return flight;
-}
-public void setFlight(Flight flight) {
-this.flight = flight;
-}
-public LocalDateTime getBookingDate() {
-return bookingDate;
-}
-public void setBookingDate(LocalDateTime bookingDate) {
-this.bookingDate = bookingDate;
-}
-public Booking(long bookingId, long ticketCost, int noOfPassengers, User1 user1, List<Passenger> passengerList,
-Flight flight, LocalDateTime bookingDate) {
-super();
-this.bookingId = bookingId;
-this.ticketCost = ticketCost;
-this.noOfPassengers = noOfPassengers;
-this.user1 = user1;
-this.passengerList = passengerList;
-this.flight = flight;
-this.bookingDate = bookingDate;
-}
-public Booking() {
-super();
-// TODO Auto-generated constructor stub
-}
-@Override
-public String toString() {
-return "Booking [bookingId=" + bookingId + ", ticketCost=" + ticketCost + ", noOfPassengers=" + noOfPassengers
-+ ", user1=" + user1 + ", passengerList=" + passengerList + ", flight=" + flight + ", bookingDate="
-+ bookingDate + "]";
-}
-   
 
 
+/**
+*
+* @param bookingId
+* @param userId
+* @param bookingdate
+* @param passenger
+* @param ticketCost
+* @param flight
+* @param noOfPassengers
+*/
 }
+

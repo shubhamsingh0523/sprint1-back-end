@@ -23,8 +23,8 @@ public class User1 {
 //@NotNull(message="UserId Is Mandatory")	
 @Id
 @Column(name="user_id")
-@GeneratedValue(strategy = GenerationType.SEQUENCE,generator ="user_id")
-@SequenceGenerator(sequenceName = "user_id", initialValue = 1, allocationSize = 1, name = "user_id")
+//@GeneratedValue(strategy = GenerationType.SEQUENCE,generator ="user_id")
+//@SequenceGenerator(sequenceName = "user_id", initialValue = 1, allocationSize = 1, name = "user_id")
 private Integer userId;
 
 @Column(name="user_type")
