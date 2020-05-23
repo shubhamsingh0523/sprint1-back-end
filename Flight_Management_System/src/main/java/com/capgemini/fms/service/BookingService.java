@@ -1,6 +1,6 @@
 package com.capgemini.fms.service;
 
-import java.util.ArrayList;
+
 import java.util.List;
 import java.util.Optional;
 
@@ -11,12 +11,13 @@ import org.springframework.stereotype.Service;
 
 import com.capgemini.fms.dao.BookingDao;
 import com.capgemini.fms.entity.Booking;
+import com.capgemini.fms.exception.BookingException;
 
 
 
 @Service
 
-public class BookingService {
+public class BookingService implements BookingServiceInterface{
 	
 	@Autowired
 	private BookingDao bookingDao;
@@ -44,9 +45,13 @@ public class BookingService {
 	}
 	
 	@Transactional
-	public Booking updatebooking(Booking booking,long bookingId)
+	public Booking updatebooking(Booking booking)
 	{
-		return bookingDao.save(booking);
+		Optional<Booking> optionalBooking=bookingDao.findById(booking.getBookingId());
+		if(optionalBooking.isPresent()) {
+			return bookingDao.save(booking);
+		}
+		throw new BookingException("Booking Id not present");
 	}
 	
 }

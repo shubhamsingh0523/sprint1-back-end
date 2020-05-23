@@ -27,12 +27,13 @@ import com.capgemini.fms.entity.Flight;
 import com.capgemini.fms.exception.BookingException;
 import com.capgemini.fms.service.BookingService;
 
+@CrossOrigin(origins="http://localhost:4200")
 @RestController
 public class BookingController {
 	@Autowired
 	private BookingService bookingservice;
 
-	@CrossOrigin
+	@CrossOrigin 
 	@PostMapping("/addbooking")
 	public ResponseEntity<String> addBooking(@Valid @RequestBody Booking booking, BindingResult br)
 			throws BookingException {
@@ -45,23 +46,25 @@ public class BookingController {
 		}
 		try {
 			bookingservice.addbooking(booking);
-			return new ResponseEntity<String>("Flight added successfully", HttpStatus.OK);
+			return new ResponseEntity<String>("booking done successfully", HttpStatus.OK);
 
 		} catch (DataIntegrityViolationException ex) {
-			throw new BookingException("ID already exists");
+			throw new BookingException("booking already exists");
 		}
 	}
 
-	@CrossOrigin
+	
 	@GetMapping("/viewallbooking")
+	@CrossOrigin(origins="http://localhost:4200")
 	public ResponseEntity<List<Booking>> getBookinglist() {
 		List<Booking> bookingList = bookingservice.show();
+		
 		return new ResponseEntity<List<Booking>>(bookingList, HttpStatus.OK);
 	}
 	
 	@CrossOrigin
-	@DeleteMapping("/deletebooking/{id}")
-	public ResponseEntity deletebooking(@Valid @RequestParam long bookingId) throws BookingException
+	@DeleteMapping("/deletebooking/{bookingId}")
+	public ResponseEntity<String> deletebooking( @PathVariable long bookingId) throws BookingException
 	{
 		try
 		{
@@ -74,8 +77,8 @@ public class BookingController {
 	}
 	
 	@CrossOrigin
-	@PutMapping("/updatebooking/{id}")
-	public ResponseEntity updatebooking(@Valid @RequestBody Booking booking,@RequestParam long bookingId,BindingResult br ) throws BookingException
+	@PutMapping("/updatebooking")
+	public ResponseEntity<String> updatebooking(@Valid @RequestBody Booking booking, BindingResult br ) throws BookingException
 	{
 		String err = "";
 		if (br.hasErrors()) {
@@ -85,8 +88,8 @@ public class BookingController {
 			throw new BookingException(err);
 		}
 		try {
-			bookingservice.updatebooking(booking,bookingId);
-			return new ResponseEntity<String>("booking updated successfully", HttpStatus.OK);
+			bookingservice.updatebooking(booking);
+			return new ResponseEntity<String>("Flight updated successfully", HttpStatus.OK);
 
 		} catch (DataIntegrityViolationException ex) {
 			throw new BookingException("bookingId already exist");
@@ -101,7 +104,3 @@ public class BookingController {
 		
 	}
 		
-	
-	
-	
-

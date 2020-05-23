@@ -15,33 +15,33 @@ import com.capgemini.fms.entity.User1;
 @Service
 @Transactional
 public class User1Service {
-	
-	@Autowired
-	User1Dao user1Dao;
-	public boolean addUser1(User1 user1)
-	{
-		return user1Dao.save(user1) !=null;
-	}
-	
-	public Optional<User1> shows(int user_id )
-	{
-		return user1Dao.findById(user_id);
-	}
-	
-	public List<User1> show()
-	{
-		return user1Dao.findAll();
-	}
-	
-	public void deleteUser1(int user_id) {
 
-		user1Dao.deleteById(user_id);
-	}
-	
-	public User1 updateUser1(User1 user1,int user_id) {
-		
-		return user1Dao.save(user1);
-	}  
-	 
-	
+@Autowired
+User1Dao user1Dao;
+public boolean addUser1(User1 user1)
+{
+return user1Dao.save(user1) !=null;
+}
+
+public Optional<User1> User1details(Integer userId )
+{
+return user1Dao.findById(userId);
+}
+
+public List<User1> show()
+{
+return user1Dao.findAll();
+}
+
+public void deleteUser1(Integer userId) {
+
+user1Dao.deleteById(userId);
+}
+
+public User1 updateUser1(User1 user1,int userId) {
+
+return user1Dao.save(user1);
+}  
+
+
 }

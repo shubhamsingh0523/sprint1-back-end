@@ -13,7 +13,7 @@ import com.capgemini.fms.dao.ScheduledFlightDao;
 import com.capgemini.fms.entity.ScheduledFlight;
 
 @Service
-@Transactional
+
 public class ScheduledFlightService {
 	
 	@Autowired
@@ -40,18 +40,19 @@ public class ScheduledFlightService {
 	}
 	
 	@Transactional
-	public Optional<ScheduledFlight> scheduledflightdetails(Integer flightNumber){
-		return scheduledflightDao.findById(flightNumber);
+	public Optional<ScheduledFlight> scheduledflightdetails(Integer availableSeats){
+		return scheduledflightDao.findById(availableSeats);
 	}
 	
 	@Transactional
-	public void deletescheduledflight(int availableSeats) {
+	public void deletescheduledflight(Integer availableSeats) {
 		scheduledflightDao.deleteById(availableSeats);
 	}
 	
 	@Transactional
-	public ScheduledFlight modifyscheduledflight (ScheduledFlight scheduledflight , int availableSeats) {
-		return scheduledflightDao.save(scheduledflight);
+	public boolean modifyscheduledflight (ScheduledFlight scheduledflight , Integer availableSeats) {
+		scheduledflight.setAvailableSeats(scheduledflight.getAvailableSeats());
+		return scheduledflightDao.save(scheduledflight) != null;
 		
 	}
 

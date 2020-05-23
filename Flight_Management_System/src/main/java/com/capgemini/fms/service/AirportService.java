@@ -25,13 +25,13 @@ public class AirportService {
 		airportDao.deleteById(airportCode);
 	}
 	@Transactional
-	public List<Airport> retrieve(){
+	public List<Airport> viewallairport(){
 		return airportDao.findAll();
 	}
 	@Transactional
-	public Airport editairport(Airport airport,String airportCode)
-	{
-		return airportDao.save(airport);
+	public boolean updateairport(Airport airport,String airportCode)
+	{   airport.setAirportLocation(airport.getAirportLocation());
+		return airportDao.save(airport)!=null;
 	}
 	@Transactional
 	public Optional<Airport> airportdetails(String airportCode){

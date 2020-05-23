@@ -1,6 +1,7 @@
 package com.capgemini.fms.controller;
 
 import java.util.List;
+import java.util.Optional;
 
 import javax.validation.Valid;
 
@@ -13,6 +14,7 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -23,14 +25,15 @@ import com.capgemini.fms.entity.ScheduledFlight;
 import com.capgemini.fms.exception.ScheduledFlightException;
 import com.capgemini.fms.service.ScheduledFlightService;
 
+@CrossOrigin(origins = "http://localhost:4200")
 @RestController
 public class ScheduledFlightController {
 	
 	@Autowired
 	private ScheduledFlightService scheduledflightservice;
 	
-	@CrossOrigin
 	@PostMapping("/addscheduledflight")
+	@CrossOrigin(origins = "http://localhost:4200")
 	public ResponseEntity<String> addscheduledflight(@Valid @RequestBody ScheduledFlight scheduledflight , BindingResult br) throws ScheduledFlightException {
 		String err = " ";
 		if(br.hasErrors()) {
@@ -48,16 +51,16 @@ public class ScheduledFlightController {
 		}
 	}
 	
-	@CrossOrigin
 	@GetMapping("/viewallscheduledflight")
+	@CrossOrigin(origins = "http://localhost:4200")
 	public ResponseEntity<List<ScheduledFlight>> getScheduledFlightlist(){
 		List<ScheduledFlight> scheduledflightlist = scheduledflightservice.showallscheduledflight();
 		return new ResponseEntity<List<ScheduledFlight>>(scheduledflightlist , HttpStatus.OK);
 	}
 	
-	@CrossOrigin
-	@DeleteMapping("/deletescheduledflight/{id}")
-	public ResponseEntity deletescheduledflight(@Valid @RequestParam int availableSeats) throws ScheduledFlightException {
+	@DeleteMapping("/deletescheduledflight/{availableSeats}")
+	@CrossOrigin(origins = "http://localhost:4200")
+	public ResponseEntity deletescheduledflight(@PathVariable Integer availableSeats) throws ScheduledFlightException {
 		try {
 			scheduledflightservice.deletescheduledflight(availableSeats);
 			return new ResponseEntity<String>("Scheduled Flight deleted", HttpStatus.OK);
@@ -67,9 +70,9 @@ public class ScheduledFlightController {
 		}
 	}
 	
-	@CrossOrigin
-	@PutMapping("/modifyscheduledflight/{id}")
-	public ResponseEntity modifyscheduledflight(@Valid @RequestBody ScheduledFlight scheduledflight,@RequestParam int availableSeats,BindingResult br ) throws ScheduledFlightException
+	@PutMapping("/modifyscheduledflight/{availableSeats}")
+	@CrossOrigin(origins = "http://localhost:4200")
+	public ResponseEntity modifyscheduledflight(@Valid @RequestBody ScheduledFlight scheduledflight,@PathVariable Integer availableSeats,BindingResult br ) throws ScheduledFlightException
 	{
 		String err = " ";
 		if(br.hasErrors()) {
@@ -84,6 +87,17 @@ public class ScheduledFlightController {
 		}
 		catch (DataIntegrityViolationException ex) {
 			throw new ScheduledFlightException("unavailable scheduled flight");
+		}
+	}
+	
+	@GetMapping("/getscheduledflightdetails/{availableSeats}")
+	@CrossOrigin(origins = "http://localhost:4200")
+	public Optional<ScheduledFlight>scheduledflightdetails(@PathVariable Integer availableSeats) throws ScheduledFlightException{
+		try {
+			return scheduledflightservice.scheduledflightdetails(availableSeats);
+		}
+		catch(Exception ex) {
+			throw new ScheduledFlightException(ex.getMessage());
 		}
 	}
 
